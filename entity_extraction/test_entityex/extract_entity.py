@@ -30,7 +30,7 @@ def extract_entities_and_keywords(
     entities: List[Entity] = []
     keywords: List[Tuple[str, float]] = []
 
-    # ✅ Built-in NER using GLiNER
+    # Built-in NER using GLiNER
     if extract_entities:
         if GLiNER is None:
             raise ImportError("GLiNER is not installed. Install it with: pip install gliner")
@@ -42,7 +42,7 @@ def extract_entities_and_keywords(
             for e in predicted if e['label'] in allowed_types
         ])
 
-    # ✅ Custom regex-based entities
+    # Custom regex-based entities
     if custom_entity_patterns:
         import re
         for label, pattern in custom_entity_patterns.items():
@@ -51,7 +51,7 @@ def extract_entities_and_keywords(
                     Entity(type=label, text=match.group(), start=match.start(), end=match.end())
                 )
 
-    # ✅ Keyword extraction using KeyBERT
+    # Keyword extraction using KeyBERT
     if extract_keywords:
         if KeyBERT is None:
             raise ImportError("KeyBERT is not installed. Install it with: pip install keybert")
@@ -59,3 +59,12 @@ def extract_entities_and_keywords(
         keywords = kw_model.extract_keywords(text, top_n=keyword_count)
 
     return entities if entities else None, keywords if keywords else None
+if __name__ == "__main__":
+    sample_text = "Elon Musk founded SpaceX in California on March 14, 2002. Contact: elon@spacex.com"
+    ents, kws = extract_entities_and_keywords(
+        sample_text,
+        extract_entities=True,
+        extract_keywords=True
+    )
+    print("Entities:", ents)
+    print("Keywords:", kws)
